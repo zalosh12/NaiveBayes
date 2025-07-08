@@ -11,7 +11,7 @@ class NaiveBayesClassifier:
         self.class_priors = df[class_column].value_counts(normalize=True).to_dict()
         self.features = [i for i in df.columns if i != class_column]
         lables = df[class_column].unique()
-        print(features,lables)
+        print(self.features,lables)
 
         for lable in lables:
             self.model[lable] = {}

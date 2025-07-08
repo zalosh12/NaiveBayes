@@ -13,5 +13,5 @@ print(classifier.predict(df.iloc[5]))
 print(df.iloc[0]['class'])
 # print(classifier.model)
 test_df = loader.load_data()
-print(classifier.evaluate(test_df,class_column='class'))
+# print(classifier.evaluate(test_df,class_column='class'))
 
