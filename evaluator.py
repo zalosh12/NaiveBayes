@@ -2,7 +2,7 @@ class Evaluator:
     def __init__(self,classifier):
         self.classifier = classifier
 
-    def evaluate_data_frame(self,df,class_column):
+    def evaluate_data_frame(self,df,class_column='class'):
         correct = 0
         total = len(df)
 

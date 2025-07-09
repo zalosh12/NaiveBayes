@@ -4,7 +4,7 @@ class NaiveBayesClassifier:
        self.class_priors = {}
        self.features = []
 
-    def create_model(self,df,class_column):
+    def create_model(self,df,class_column='class'):
 
         df = df.set_index('Index')
 
@@ -35,9 +35,9 @@ class NaiveBayesClassifier:
         res = {}
         for label in self.model.keys():
             prob = self.class_priors[label]
-            for fearure in self.model[label].keys():
-                val_input = row[fearure]
-                prob *= self.model[label][fearure].get(val_input,1e-6)
+            for feature in self.model[label].keys():
+                val_input = row[feature]
+                prob *= self.model[label][feature].get(val_input,1e-6)
             res[label] = prob
         return max(res,key=res.get)
 
