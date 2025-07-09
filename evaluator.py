@@ -1,18 +1,24 @@
+import pandas as pd
+
+
 class Evaluator:
     def __init__(self,classifier):
         self.classifier = classifier
 
-    def evaluate_data_frame(self,df,class_column='class'):
-        correct = 0
-        total = len(df)
+    def evaluate_model(self,X_test: pd.DataFrame,y_test: pd.Series):
+        res = X_test.apply(self.classifier.predict,axis=1)
+        correct = (res == y_test).sum()
+        accuracy = correct / len(y_test) * 100
 
-        for _,row in df.iterrows():
-            old_res = row[class_column]
-            row = row.drop(class_column)
-            if self.predict_single(row) == old_res:
-                correct += 1
-        correct_percent = correct / total * 100
-        return correct_percent
+        return accuracy
 
-    def predict_single(self, sample_record) :
-        return self.classifier.predict(sample_record)
+        # print(len(X_test), len(y_test))
+        # correct = 0
+        # for i,row in X_test.iterrows():
+        #     prediction = self.classifier.predict(row)
+        #     if prediction == y_test.iloc[i]:
+        #         correct += 1
+        # return (correct / len(y_test)) * 100
+
+    # def predict_single(self, sample_record) :
+    #     return self.classifier.predict(sample_record)
