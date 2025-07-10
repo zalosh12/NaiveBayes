@@ -1,0 +1,51 @@
+# סביבת פיתוח וירטואלית
+.venv/
+venv/
+
+# קבצים אוטומטיים של Python
+__pycache__/
+*.py[cod]
+
+# קבצי קומפילציה / בינאריים
+*.so
+*.exe
+*.dll
+*.o
+*.a
+*.out
+
+# קבצי IDE
+.idea/
+.vscode/
+
+# קבצי בדיקות ולוגים
+*.log
+*.coverage
+coverage.xml
+.cache/
+
+# קבצי נתונים פרטיים
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.json
+
+# חריגות לקבצים שרוצים לכלול ב-Git
+!phishing.csv
+# !tests.py  # אם רוצים לכלול את קובץ המבחנים
+
+# קבצי טקסט פרטיים
+*.txt
+!README.txt
+
+# Notebooks (Jupyter)
+*.ipynb_checkpoints/
+
+# קבצים זמניים
+*.tmp
+*.swp
+*.bak
+.DS_Store
+Thumbs.db
+

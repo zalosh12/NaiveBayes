@@ -15,7 +15,6 @@ class ClassifierManager:
 
 
     def run(self):
-        # path = self.ui.enter_file_path()
         path = "phishing.csv"
         loader = LoadData(path)
         self.df = loader.data
@@ -23,16 +22,16 @@ class ClassifierManager:
             return
         splitter = DataSplitter(self.df,class_column=self.class_column)
         X_train_df = splitter.X_train.copy()
-        y_train_df = splitter.y_train
+        y_train_df = splitter.y_train.copy()
         X_test_df = splitter.X_test.copy()
-        y_test_df = splitter.y_test
+        y_test_df = splitter.y_test.copy()
 
         self.classifier.create_model(X_train_df, y_train_df)
 
         mode = self.ui.choose_option()
         if mode == '1':
             accuracy = self.evaluator.evaluate_model(X_test_df,y_test_df)
-            print(f'Accuracy: {accuracy:.2f}%')
+            print(f'Accuracy: {accuracy:.5f}%')
         elif mode == '2':
             sample = self.ui.get_row_input(self.classifier.features)
             prediction = self.classifier.predict(sample)

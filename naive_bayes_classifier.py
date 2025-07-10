@@ -4,11 +4,11 @@ class NaiveBayesClassifier:
     def __init__(self):
        self.model = {}
        self.class_priors = {}
-       self.features = []
+       self.features = {}
 
     def create_model(self, X_train: pd.DataFrame, y_train: pd.Series):
         self.class_priors = y_train.value_counts(normalize=True).to_dict()
-        self.features = X_train.columns
+        self.features = {col: X_train[col].unique().tolist() for col in X_train.columns}
         labels = y_train.unique()
 
         for label in labels:
@@ -28,9 +28,8 @@ class NaiveBayesClassifier:
                     probs[val] = (count + 1) / (total + len(possible_values))
 
                 self.model[label][feature] = probs
-                print(self.model)
 
-    def predict(self,row: pd.Series):
+    def predict(self,row: pd.Series) -> float:
         res = {}
         for label in self.model.keys():
             prob = self.class_priors[label]

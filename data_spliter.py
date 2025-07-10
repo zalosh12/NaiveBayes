@@ -1,7 +1,7 @@
 import pandas as pd
 
 class DataSplitter:
-    def __init__(self, df, class_column, test_frac=0.3, random_state=42):
+    def __init__(self, df, class_column, test_frac=0.3,random_state=33):
         self.df = df
         self.class_column = class_column
         self.test_frac = test_frac
@@ -15,7 +15,7 @@ class DataSplitter:
         self.split()
 
     def split(self):
-        df_shuffled = self.df.sample(frac=1, random_state=self.random_state).reset_index(drop=True)
+        df_shuffled = self.df.sample(frac=1,random_state=self.random_state).reset_index(drop=True)
         split_index = int(len(df_shuffled) * (1 - self.test_frac))
 
         train_df = df_shuffled[:split_index]
