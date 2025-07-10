@@ -48,4 +48,5 @@ coverage.xml
 *.bak
 .DS_Store
 Thumbs.db
-
+test2.py
+tests.py
