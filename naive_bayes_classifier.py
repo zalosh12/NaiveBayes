@@ -29,7 +29,7 @@ class NaiveBayesClassifier:
 
                 self.model[label][feature] = probs
 
-    def predict(self,row: pd.Series) -> float:
+    def predict(self,row: pd.Series):
         res = {}
         for label in self.model.keys():
             prob = self.class_priors[label]

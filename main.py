@@ -21,7 +21,7 @@ def main():
         class_column='class'
     )
 
-    data_path = "car_evaluation"
+    data_path = "phishing.csv"
     manager.run(data_path)
 
 if __name__ == "__main__":

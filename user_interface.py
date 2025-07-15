@@ -35,7 +35,7 @@ class UserInterface:
 
     def get_row_input(self, features_with_values) :
         print("Enter feature values:")
-        return pd.Series({
+        return {
             feature : self.get_valid_input(feature, valid_values)
             for feature, valid_values in features_with_values.items()
-        })
+        }

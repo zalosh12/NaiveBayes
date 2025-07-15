@@ -12,6 +12,6 @@ class Evaluator:
                 correct += 1
         accuracy = correct / len(y_test) * 100
 
-        return accuracy
+        return float(accuracy)
 
 
