@@ -25,18 +25,18 @@ coverage.xml
 .cache/
 
 # קבצי נתונים פרטיים
-*.csv
-*.tsv
-*.xls
-*.xlsx
-*.json
+#*.csv
+#*.tsv
+#*.xls
+#*.xlsx
+#*.json
 
 # חריגות לקבצים שרוצים לכלול ב-Git
-!phishing.csv
-# !tests.py  # אם רוצים לכלול את קובץ המבחנים
+#!data_sets/phishing.csv
+
 
 # קבצי טקסט פרטיים
-*.txt
+#*.txt
 !README.txt
 
 # Notebooks (Jupyter)
@@ -48,5 +48,4 @@ coverage.xml
 *.bak
 .DS_Store
 Thumbs.db
-test2.py
-tests.py
+

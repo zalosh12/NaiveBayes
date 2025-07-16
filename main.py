@@ -21,7 +21,7 @@ def main():
         class_column='class'
     )
 
-    data_path = "phishing.csv"
+    data_path = "data_sets/phishing.csv"
     manager.run(data_path)
 
 if __name__ == "__main__":
