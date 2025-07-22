@@ -2,17 +2,17 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
 
-from classifier_manager import ClassifierManager
-from naive_bayes_classifier import NaiveBayesClassifier
-from evaluator import Evaluator
-from data_loader import LoadData
-from data_spliter import DataSplitter
+from past_files.classifier_manager import ClassifierManager
+from server.naive_bayes_classifier import NaiveBayesClassifier
+from server.evaluator import Evaluator
+from server.data_loader import DataLoader
+from server.data_spliter import DataSplitter
 
 app = FastAPI()
 
 classifier = NaiveBayesClassifier()
 evaluator = Evaluator(classifier)
-data_loader = LoadData
+data_loader = DataLoader
 data_splitter = DataSplitter
 
 manager = ClassifierManager(

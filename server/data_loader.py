@@ -1,8 +1,9 @@
 import pandas as pd
 import requests
 from io import StringIO
+import os
 
-class LoadData:
+class DataLoader:
     def __init__(self,path_file):
         self.path_file = path_file
         self.data = None
@@ -14,13 +15,16 @@ class LoadData:
                 response.raise_for_status()
                 csv_data = StringIO(response.text)
                 df = pd.read_csv(csv_data)
+                file_name = os.path.basename(self.path_file)
+                df.to_csv(os.path.join("../data_sets", file_name), index=False)
+                # df.to_csv("../data_sets",f"{os.path.basename(self.path_file)}")
             else:
                 df = pd.read_csv(self.path_file)
                 self.data = df
 
             if df.empty:
-                raise ValueError("Loaded DataFrame is empty")
-
+                    raise ValueError("Loaded DataFrame is empty")
+            df = df.astype(str)
             return df
 
         except FileNotFoundError:

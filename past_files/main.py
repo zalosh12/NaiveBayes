@@ -1,15 +1,15 @@
-from naive_bayes_classifier import NaiveBayesClassifier
-from evaluator import Evaluator
-from data_loader import LoadData
-from data_spliter import DataSplitter
+from server.naive_bayes_classifier import NaiveBayesClassifier
+from server.evaluator import Evaluator
+from server.data_loader import DataLoader
+from server.data_spliter import DataSplitter
 from user_interface import UserInterface
-from classifier_manager import ClassifierManager
+from past_files.classifier_manager import ClassifierManager
 
 def main():
     classifier = NaiveBayesClassifier()
     evaluator = Evaluator(classifier)
     ui = UserInterface()
-    data_loader = LoadData
+    data_loader = DataLoader
     data_splitter = DataSplitter
 
     manager = ClassifierManager(
@@ -21,7 +21,7 @@ def main():
         class_column='class'
     )
 
-    data_path = "data_sets/phishing.csv"
+    data_path = "../data_sets/phishing.csv"
     manager.run(data_path)
 
 if __name__ == "__main__":

@@ -5,10 +5,12 @@ class NaiveBayesClassifier:
        self.model = {}
        self.class_priors = {}
        self.features = {}
+       self.name = None
 
     def create_model(self, X_train: pd.DataFrame, y_train: pd.Series):
         self.class_priors = y_train.value_counts(normalize=True).to_dict()
         self.features = {col: X_train[col].unique().tolist() for col in X_train.columns}
+        # self.name = name
         labels = y_train.unique()
 
         for label in labels:

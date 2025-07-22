@@ -1,5 +1,5 @@
 import pandas as pd
-
+import pickle
 
 class ClassifierManager:
     def __init__(self, classifier, evaluator, ui, data_loader, data_splitter, class_column=None):
@@ -17,6 +17,7 @@ class ClassifierManager:
         self.y_test = None
 
     def load_data(self, path):
+        self.classifier.name = path
         loader = self.data_loader(path)
         self.df = loader.load_data()
         if self.df is None:
@@ -35,6 +36,8 @@ class ClassifierManager:
     def train(self):
         self.classifier.create_model(self.X_train, self.y_train)
         print("the model created and trained successfully")
+        with open(f'saved_models/{self.classifier.name}.pkl', 'wb') as f :
+            pickle.dump(self.classifier, f)
 
     def evaluate(self):
         accuracy = self.evaluator.evaluate_model(self.X_test,self.y_test)
