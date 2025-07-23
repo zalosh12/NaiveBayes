@@ -8,14 +8,16 @@ logger = logging.getLogger(__name__)
 
 
 class LoadData :
-    def __init__(self, file_src) :
+    def __init__(self, file_src=None) :
         self.file_src = file_src
 
-    def load_data(self) -> pd.DataFrame :
+    def load_data(self) -> pd.DataFrame:
         df = None
 
+        if self.file_src is None:
+            df = pd.read_csv("../default_data.csv")
 
-        if hasattr(self.file_src, 'filename') and hasattr(self.file_src, 'file') :
+        elif hasattr(self.file_src, 'filename') and hasattr(self.file_src, 'file') :
             try :
                 text_stream = TextIOWrapper(self.file_src.file, encoding='utf-8')
                 df = pd.read_csv(text_stream)

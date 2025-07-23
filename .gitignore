@@ -32,7 +32,7 @@ coverage.xml
 #*.json
 
 # חריגות לקבצים שרוצים לכלול ב-Git
-#!data_sets/phishing.csv
+#!data_sets/default_data.csv
 
 
 # קבצי טקסט פרטיים

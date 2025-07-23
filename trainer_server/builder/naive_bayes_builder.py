@@ -30,3 +30,11 @@ class NaiveBayesModel:
                     probs[val] = (count + 1) / (total + len(possible_values))
 
                 self.model[label][feature] = probs
+
+    def model_to_dict(self):
+
+        return {
+            "model":self.model,
+            "class_priors":self.class_priors,
+            "features":self.features,
+        }

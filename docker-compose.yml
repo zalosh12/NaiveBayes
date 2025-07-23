@@ -3,7 +3,7 @@ version: '3.8'
 services:
   server:
     build:
-      context: ./server
+      context: trainer_server
       dockerfile: Dockerfile
     container_name: naive_bayes_server_v1_0
     ports:
@@ -22,5 +22,5 @@ services:
     depends_on:
       - server
     environment:
-      - API_URL=http://server:8009   # שימוש בשם השירות של השרת בתוך הרשת של Docker Compose
+      - API_URL=http://trainer_server:8009   # שימוש בשם השירות של השרת בתוך הרשת של Docker Compose
     restart: unless-stopped

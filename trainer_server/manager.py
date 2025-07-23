@@ -2,11 +2,10 @@ from builder.naive_bayes_builder import NaiveBayesModel
 from dat.data_loader import LoadData
 from data_handler.data_splitter import DataSplitter
 from evaluator.evaluate_model import Evaluate
-from cls.naive_bayes_classifier import NaiveBayesClassifier
 
 class Manager:
     def __init__(self):
-        self.classifier = None
+        self.trained_model = None
         self.class_column = 'class'
 
 
@@ -31,7 +30,7 @@ class Manager:
         evaluator = Evaluate(naive_model)
         accuracy = evaluator.evaluate_model(x_test, y_test)
 
-        self.classifier = NaiveBayesClassifier(naive_model)
+        self.trained_model= naive_model.model_to_dict()
 
         print(accuracy)
         return accuracy
