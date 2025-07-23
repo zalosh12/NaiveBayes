@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: naive_bayes_server_v1_0
+    ports:
+      - "8009:8009"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: naive_bayes_client_v1_0
+    ports:
+      - "8509:8501"                     # פורט ברירת המחדל של Streamlit
+    depends_on:
+      - server
+    environment:
+      - API_URL=http://server:8009   # שימוש בשם השירות של השרת בתוך הרשת של Docker Compose
+    restart: unless-stopped
