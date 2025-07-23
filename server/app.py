@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from manager import Manager
 
-# הגדרת לוגר לתיעוד שגיאות בטרמינל
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -35,10 +34,9 @@ async def train_from_upload(file: UploadFile = File(...)) :
         return {"message" : "Model trained successfully from uploaded file.", "accuracy" : accuracy}
 
     except HTTPException as e :
-        # אם זו שגיאת HTTP שהכנו (למשל, 400 על קובץ פגום), תן לה לעבור
+
         raise e
     except Exception as e :
-        # אם זו שגיאה לא צפויה, תעד אותה והחזר שגיאת 500
         logger.error(f"An unexpected error occurred in /train_from_upload/: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"An unexpected server error occurred: {str(e)}")
 
@@ -78,10 +76,8 @@ async def predict(request: PredictRequest) :
         if manager.classifier is None :
             raise HTTPException(status_code=404, detail="Model not trained yet. Please train a model first.")
 
-        # המרה אוטומטית על ידי Pydantic, אין צורך לקרוא את ה-JSON ידנית
         numpy_prediction = manager.classifier.predict(request.features)
 
-        # המרה מסוגי numpy לסוגי פייתון רגילים
         if isinstance(numpy_prediction, np.integer) :
             python_prediction = int(numpy_prediction)
         elif isinstance(numpy_prediction, np.floating) :

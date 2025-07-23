@@ -7,9 +7,8 @@ API_URL = os.getenv("API_URL", "http://localhost:8009")
 
 tab1, tab2 = st.tabs(["Upload Data","Make Prediction"])
 
-# Work inside Tab 1
+
 with tab1:
-    # Split Tab 1 into two columns
     col1, col2 = st.columns(2)
 
     with col1:
@@ -30,7 +29,6 @@ with tab1:
             else :
                 st.warning("Please enter a valid URL.")
 
-            # === תוכן מלא ומתוקן עבור with col2: ===
 
     with col2 :
                 st.subheader("Train Model from Local CSV")
@@ -40,94 +38,43 @@ with tab1:
 
                 if uploaded_file is not None :
                     try :
-                        # תצוגה מקדימה - קוראת את הקובץ באופן זמני
                         df_preview = pd.read_csv(uploaded_file)
                         st.success("File preview loaded successfully!")
                         st.markdown("### Preview:")
                         st.dataframe(df_preview.head())
 
-                        # איפוס המצביע כדי שנוכל לקרוא את הקובץ שוב לשליחה
+
                         uploaded_file.seek(0)
 
                         if st.button("Upload and Train Model", key="upload_train") :
                             with st.spinner("Uploading and training...") :
 
-                                # --- בלוק ה-try-except המשופר לשליחה ל-API ---
                                 try :
-                                    # קריאת תוכן הקובץ לבייטים
                                     file_bytes = uploaded_file.getvalue()
                                     files = {"file" : (uploaded_file.name, file_bytes, "text/csv")}
 
                                     res = requests.post(f"{API_URL}/train_from_upload/", files=files)
 
-                                    # זריקת שגיאה אם הסטטוס הוא 4xx או 5xx
                                     res.raise_for_status()
 
                                     data = res.json()
                                     st.success(f"Model trained successfully! Accuracy: {data['accuracy']:.2%}")
 
-                                # --- בלוק הטיפול החכם בשגיאות ---
                                 except requests.exceptions.RequestException as e :
                                     error_message = f"A network or server error occurred: {e}"
 
-                                    # אם השגיאה היא שגיאת HTTP ויש לה גוף תגובה
                                     if e.response is not None :
                                         try :
-                                            # ננסה לחלץ את הודעת ה-'detail' מה-JSON
                                             error_detail = e.response.json().get('detail', e.response.text)
                                             error_message = f"Error from server: {error_detail}"
                                         except ValueError :
-                                            # אם גוף התגובה הוא לא JSON, נציג את הטקסט שלו
                                             error_message = f"Server returned a non-JSON error ({e.response.status_code}): {e.response.text}"
 
                                     st.error(error_message)
 
                     except Exception as e :
-                        # הבלוק הזה תופס שגיאות מקומיות, למשל אם התצוגה המקדימה נכשלת
                         st.error(
                             f"Error reading file for preview: Please ensure the CSV is well-formatted. Details: {e}")
-    # with col2:
-    #     st.subheader("Train Model from Local CSV")
-    #     st.markdown("Upload a CSV file from your computer to train a new model.")
-    #
-    #     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
-    #
-    #     if uploaded_file is not None :
-    #         try:
-    #             df = pd.read_csv(uploaded_file)
-    #             df.astype(str)
-    #             st.success("File uploaded successfully!")
-    #             st.markdown("### Preview:")
-    #             st.dataframe(df.head())
-    #
-    #             uploaded_file.seek(0)  # Reset file pointer
-    #             if st.button("Upload and Train Model", key="upload_train") :
-    #                 with st.spinner("Uploading and training...") :
-    #                     try :
-    #                         file_bytes = uploaded_file.getvalue()
-    #                         files = {"file" : (uploaded_file.name, file_bytes, "text/csv")}
-    #                         res = requests.post(f"{API_URL}/train_from_upload/", files=files)
-    #                         res.raise_for_status()
-    #                         data = res.json()
-    #                         st.success(f"Model trained successfully! Accuracy: {data['accuracy']:.2%}")
-    #                     except Exception as e :
-    #                         st.error(f"Upload error: {e}")
-
-                # if st.button("Upload and Train Model", key="upload_train") :
-                #     with st.spinner("Uploading and training...") :
-                #         files = {"file" : (uploaded_file.name, uploaded_file, "text/csv")}
-                #         res = requests.post(f"{API_URL}/train_from_upload/", files=files)
-                #         res.raise_for_status()
-                #         data = res.json()
-                #         st.success(f"Model trained successfully! Accuracy: {data['accuracy']:.2%}")
-
-        #     except Exception as e :
-        #         st.error(f"File error: {e}")
-        # else :
-        #     st.info("Please upload a CSV file.")
-
-
-# Tab 1: Prediction
 with tab2:
             st.subheader("Make Prediction on Existing Model")
             st.markdown("Select a model and provide feature values for prediction.")

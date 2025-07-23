@@ -37,7 +37,3 @@ class Manager:
         return accuracy
 
 
-# if __name__ == "__main__" :
-#         manager = Manager()
-#         data_path = "data_sets/phishing.csv"
-#         manager.run(data_path)

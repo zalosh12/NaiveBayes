@@ -1,5 +1,3 @@
-# === תוכן מלא ומתוקן סופית עבור dat/data_loader.py ===
-
 import pandas as pd
 import requests
 from io import TextIOWrapper, StringIO
@@ -14,9 +12,9 @@ class LoadData :
         self.file_src = file_src
 
     def load_data(self) -> pd.DataFrame :
-        df = None  # אתחול DataFrame ריק
+        df = None
 
-        # --- טיפול בהעלאת קובץ (עם בדיקה חסינה) ---
+
         if hasattr(self.file_src, 'filename') and hasattr(self.file_src, 'file') :
             try :
                 text_stream = TextIOWrapper(self.file_src.file, encoding='utf-8')
@@ -33,7 +31,6 @@ class LoadData :
                 logger.error(f"Unexpected error during file upload processing: {e}", exc_info=True)
                 raise HTTPException(status_code=500, detail=f"אירעה שגיאה לא צפויה בשרת בעת עיבוד הקובץ: {e}")
 
-        # --- טיפול בקובץ מ-URL ---
         elif isinstance(self.file_src, str) and self.file_src.startswith(('http://', 'https://')) :
             try :
                 response = requests.get(self.file_src)
@@ -48,37 +45,10 @@ class LoadData :
                                     detail=f"An unexpected server error occurred while processing the URL: {e}")
 
         else :
-            # אם לא נכנסנו לאף אחד מהתנאים למעלה, זהו מקור לא חוקי
             raise HTTPException(status_code=400, detail=f"Invalid file source type: {type(self.file_src).__name__}")
 
-        # בדיקה סופית לפני החזרה
         if df is None or df.empty :
             raise HTTPException(status_code=400, detail="Could not load data or the file is empty.")
 
         return df
 
-#
-#     def load_data(self) -> pd.DataFrame:
-#         try:
-#             if isinstance(self.file_src,UploadFile):
-#                 try:
-#                     df = pd.read_csv(self.file_src)
-#                 except Exception as e :
-#                     raise HTTPException(status_code=500, detail=f"Failed to process and train from file: {str(e)}")
-#             elif self.file_src.startswith('http://') or self.file_src.startswith('https://'):
-#                 response = requests.get(self.file_src)
-#                 response.raise_for_status()
-#                 csv_data = StringIO(response.text)
-#                 df = pd.read_csv(csv_data)
-#
-#             if df.empty:
-#                 raise ValueError("Loaded DataFrame is empty")
-#
-#             return df
-#
-#         except FileNotFoundError:
-#             raise FileNotFoundError(f"Error: File '{self.file_src}' not found")
-#         except requests.RequestException as e:
-#             raise ConnectionError(f"Error downloading file from URL: {e}")
-#         except Exception as e:
-#             raise RuntimeError(f"General error loading data: {e}")

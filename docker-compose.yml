@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: naive_bayes_client_v1_0
     ports:
-      - "8509:8501"                     # פורט ברירת המחדל של Streamlit
+      - "8509:8501"
     depends_on:
       - server
     environment:
