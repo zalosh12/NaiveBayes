@@ -7,11 +7,17 @@ from manager import Manager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+CLS_SERVER_URL = "http://model-classifier:8010"
+CLIENT_URL = "http://streamlit-client:8011"
+
+
 app = FastAPI(
     title="Phishing Detection API",
     description="API for training a phishing detection model and making predictions.",
     version="1.0.0"
 )
+
+
 
 manager = Manager()
 
@@ -25,7 +31,11 @@ class PredictRequest(BaseModel) :
 
 @app.on_event("startup")
 def default_data():
-    manager.run()
+    try:
+        accuracy = manager.run(file_src=None)
+        logger.info(f"Model initialized with accuracy: {accuracy}")
+    except Exception as e:
+        logger.error(f"Failed to initialize model with default data: {e}")
 
 @app.post("/train_from_upload/", tags=["Training"])
 async def train_from_upload(file: UploadFile = File(...)) :
@@ -57,7 +67,7 @@ def train_from_url(request: TrainFromUrlRequest) :
         raise HTTPException(status_code=500, detail=f"Failed to process and train from URL: {str(e)}")
 
 
-@app.get("/export_model/")
+@app.get("/export_model/",tags=["Model"])
 def export_model():
     try:
         model = manager.trained_model

@@ -15,7 +15,7 @@ class LoadData :
         df = None
 
         if self.file_src is None:
-            df = pd.read_csv("../default_data.csv")
+            df = pd.read_csv("default_data.csv")
 
         elif hasattr(self.file_src, 'filename') and hasattr(self.file_src, 'file') :
             try :

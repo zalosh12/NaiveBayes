@@ -3,7 +3,9 @@ import requests
 import pandas as pd
 import os
 
-API_URL = os.getenv("API_URL", "http://localhost:8009")
+# API_URL = os.getenv("API_URL", "http://localhost:8009")
+TRAINER_SERVER_URL = "http://model-trainer:8009"
+CLS_SERVER_URL = "http://model-classifier:8010"
 
 tab1, tab2 = st.tabs(["Upload Data","Make Prediction"])
 
@@ -20,7 +22,7 @@ with tab1:
             if url :
                 with st.spinner("Training model...") :
                     try :
-                        res = requests.post(f"{API_URL}/train_from_url/", json={"url" : url})
+                        res = requests.post(f"{TRAINER_SERVER_URL}/train_from_url/", json={"url" : url})
                         res.raise_for_status()
                         data = res.json()
                         st.success(f"Model trained successfully! Accuracy: {data['accuracy']:.2%}")
@@ -53,7 +55,7 @@ with tab1:
                                     file_bytes = uploaded_file.getvalue()
                                     files = {"file" : (uploaded_file.name, file_bytes, "text/csv")}
 
-                                    res = requests.post(f"{API_URL}/train_from_upload/", files=files)
+                                    res = requests.post(f"{TRAINER_SERVER_URL}/train_from_upload/", files=files)
 
                                     res.raise_for_status()
 
@@ -80,7 +82,7 @@ with tab2:
             st.markdown("Select a model and provide feature values for prediction.")
 
             # Load model columns
-            col_response = requests.get(f"{API_URL}/model_columns/")
+            col_response = requests.get(f"{CLS_SERVER_URL}/model_columns/")
             if col_response.status_code == 200:
                 columns_dict = col_response.json()
 
@@ -91,7 +93,7 @@ with tab2:
 
                 if st.button("Predict"):
                     with st.spinner("Making prediction..."):
-                        pred_response = requests.post(f"{API_URL}/predict/", json={
+                        pred_response = requests.post(f"{CLS_SERVER_URL}/predict/", json={
                             "features": input_data
                         })
                         if pred_response.status_code == 200:
