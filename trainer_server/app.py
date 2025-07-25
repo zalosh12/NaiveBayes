@@ -1,36 +1,36 @@
 import numpy as np
 import logging
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from manager import Manager
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# URLs of other services in the Docker network
 CLS_SERVER_URL = "http://model-classifier:8010"
 CLIENT_URL = "http://streamlit-client:8011"
 
 
-app = FastAPI(
-    title="Phishing Detection API",
-    description="API for training a phishing detection model and making predictions.",
-    version="1.0.0"
-)
+app = FastAPI()
 
 
 
-manager = Manager()
+manager = Manager() # Main model manager instance
 
 
 class TrainFromUrlRequest(BaseModel) :
-    url: str
+    url: str # URL to load CSV data for training
 
 
 class PredictRequest(BaseModel) :
-    features: dict
+    features: dict # Feature data for prediction
 
 @app.on_event("startup")
 def default_data():
+    # On server startup, train model on default data
     try:
         accuracy = manager.run(file_src=None)
         logger.info(f"Model initialized with accuracy: {accuracy}")
@@ -39,6 +39,7 @@ def default_data():
 
 @app.post("/train_from_upload/", tags=["Training"])
 async def train_from_upload(file: UploadFile = File(...)) :
+    # Train model from uploaded CSV file
     if not file.filename.endswith('.csv') :
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV file.")
 
@@ -56,6 +57,7 @@ async def train_from_upload(file: UploadFile = File(...)) :
 
 @app.post("/train_from_url/", tags=["Training"])
 def train_from_url(request: TrainFromUrlRequest) :
+    # Train model from CSV data downloaded from a given URL
     try :
         accuracy = manager.run(request.url)
         return {"message" : "Model trained successfully from URL.", "accuracy" : accuracy}
@@ -66,54 +68,21 @@ def train_from_url(request: TrainFromUrlRequest) :
         logger.error(f"An unexpected error occurred in /train_from_url/: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to process and train from URL: {str(e)}")
 
-
-@app.get("/export_model/",tags=["Model"])
+@app.get("/export_model/", tags=["Model"])
 def export_model():
+    # Export the trained model as JSON (handling numpy data types)
     try:
         model = manager.trained_model
         if model is None:
             raise Exception("No trained model found.")
-        return model
+
+        json_compatible_model = jsonable_encoder(model, custom_encoder={
+            np.integer: int,
+            np.floating: float,
+            np.ndarray: lambda x: x.tolist()
+        })
+
+        return json_compatible_model
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-# @app.get("/model_columns/", tags=["Prediction"])
-# def get_model_columns() :
-#     try :
-#         if manager.classifier is None or not hasattr(manager.classifier, 'features') :
-#             raise HTTPException(status_code=404, detail="Model not trained yet. Please train a model first.")
-#
-#         options = manager.classifier.features
-#         return options
-#
-#     except HTTPException as e :
-#         raise e
-#     except Exception as e :
-#         logger.error(f"An unexpected error occurred in /model_columns/: {e}", exc_info=True)
-#         raise HTTPException(status_code=500, detail=str(e))
-
-
-# @app.post("/predict/", tags=["Prediction"])
-# async def predict(request: PredictRequest) :
-#     try :
-#         if manager.classifier is None :
-#             raise HTTPException(status_code=404, detail="Model not trained yet. Please train a model first.")
-#
-#         numpy_prediction = manager.classifier.predict(request.features)
-#
-#         if isinstance(numpy_prediction, np.integer) :
-#             python_prediction = int(numpy_prediction)
-#         elif isinstance(numpy_prediction, np.floating) :
-#             python_prediction = float(numpy_prediction)
-#         else :
-#             python_prediction = numpy_prediction
-#
-#         return {"prediction" : python_prediction}
-#
-#     except HTTPException as e :
-#         raise e
-#     except Exception as e :
-#         logger.error(f"An unexpected error occurred in /predict/: {e}", exc_info=True)
-#         raise HTTPException(status_code=500, detail=str(e))

@@ -1,21 +1,26 @@
-
-# Base image with Python
+# Use slim Python 3.12 base image
 FROM python:3.12-slim
 
+# Create a directory for models inside the container
+RUN mkdir -p /app/models
 
+
+# Set working directory inside container to /app
 WORKDIR /app
 
-# העתקת קובץ requirements.txt.txt לקונטיינר
+# Copy requirements.txt to working directory
 COPY requirements.txt .
 
-# התקנת תלותות פייתון
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# העתקת קוד המקור של הסרבר לקונטיינר
+
+# Copy all source code files into the container
 COPY . .
 
-# פתיחת פורט 8000 (הפורט שהסרבר רץ עליו)
-EXPOSE 8009
 
-# הפקודה להרצת הסרבר עם Uvicorn, מאזין לכל הכתובות, פורט 8000
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8009"]
+# Expose port 8509 for the FastAPI server
+EXPOSE 8509
+
+# Run the FastAPI server with Uvicorn, listen on all interfaces, port 8509
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8509"]

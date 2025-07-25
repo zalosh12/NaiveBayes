@@ -1,14 +1,19 @@
 import pandas as pd
+from typing import Dict, Any
 
 
 class NaiveBayesModel:
     def __init__(self):
         # Dictionary to hold the probabilities for each class and feature value
-       self.model = {}
-       self.class_priors = {}
-       self.features = {}
+        self.model: Dict[str, Dict[str, Dict[Any, float]]] = {}
+        self.class_priors: Dict[Any, float] = {}
+        self.features: Dict[str, list] = {}
+
 
     def build_model(self, x_train: pd.DataFrame, y_train: pd.Series):
+
+        #Build the Naive Bayes model using training data.
+
         self.class_priors = y_train.value_counts(normalize=True).to_dict()
         self.features = {col: x_train[col].unique().tolist() for col in x_train.columns}
         labels = y_train.unique()
@@ -31,7 +36,9 @@ class NaiveBayesModel:
 
                 self.model[label][feature] = probs
 
-    def model_to_dict(self):
+    def model_to_dict(self) -> Dict[str, Any]:
+
+        #Export the model as a dictionary.
 
         return {
             "model":self.model,

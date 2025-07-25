@@ -1,13 +1,16 @@
 class DataSplitter:
+    # Initialize with the dataset and target column name,
+    # split the data into training and testing sets based on the specified fraction,
+    # and shuffle data with a fixed random seed for reproducibility.
     def __init__(self, df, class_column, test_frac=0.3,random_state=33):
         self.df = df
         self.class_column = class_column
         self.test_frac = test_frac
         self.random_state = random_state
 
+        # Perform the data split and store the resulting sets
         self.x_train,self.y_train,self.x_test,self.y_test = self.split()
 
-        self.split()
 
     def split(self):
         df_shuffled = self.df.sample(frac=1,random_state=self.random_state).reset_index(drop=True)

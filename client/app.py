@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 # API_URL = os.getenv("API_URL", "http://localhost:8009")
-TRAINER_SERVER_URL = "http://model-trainer:8009"
+TRAINER_SERVER_URL = "http://model-trainer:8509"
 CLS_SERVER_URL = "http://model-classifier:8010"
 
 tab1, tab2 = st.tabs(["Upload Data","Make Prediction"])
