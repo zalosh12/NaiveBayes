@@ -1,0 +1,8 @@
+# Force Unix line endings for shell scripts
+*.sh text eol=lf
+# General settings for common files
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+Dockerfile text eol=lf
