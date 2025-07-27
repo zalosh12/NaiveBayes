@@ -10,7 +10,7 @@ import logging
 
 logger = logging.getLogger("uvicorn.error")
 
-MODEL_TRAINER_URL = "http://model-trainer:8509"
+MODEL_TRAINER_URL = "http://model-trainer:8510"
 
 
 app = FastAPI()

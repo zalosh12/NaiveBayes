@@ -14,8 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port for Streamlit
-EXPOSE 8501
+EXPOSE 8011
 
-# הפקודה להרצת אפליקציית Streamlit
+#run streamlit
 
 CMD ["streamlit", "run", "app.py", "--server.port=8011", "--server.address=0.0.0.0"]

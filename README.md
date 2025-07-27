@@ -18,6 +18,11 @@ This project consists of three main components running in Docker containers:
 ├── README.md # This file, the main documentation for the project
 └── run_all.sh # A script to run all services (likely runs docker-compose)
 │
+├── client/                     
+│   ├── app.py                  
+│   ├── Dockerfile              
+│   ├── requirements.txt        
+│   └── .dockerignore 
 ├── # ----------------------------------------------------
 ├── # Classifier Service - Root Level Files
 ├── # ----------------------------------------------------

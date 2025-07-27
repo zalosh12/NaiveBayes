@@ -19,8 +19,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 
 
-# Expose port 8509 for the FastAPI server
-EXPOSE 8509
+# Expose port 8510 for the FastAPI server
+EXPOSE 8510
 
-# Run the FastAPI server with Uvicorn, listen on all interfaces, port 8509
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8509"]
+# Run the FastAPI server with Uvicorn, listen on all interfaces, port 8510
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8510"]
