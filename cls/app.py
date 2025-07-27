@@ -29,7 +29,7 @@ def fetch_model_on_startup():
 
         model_dict = response.json()
         model_handler.load_model(model_dict)
-        print("Model loaded successfully on startup")  # <-- הדפסה להצלחת הטעינה
+        print("Model loaded successfully on startup")  # <-- הדפסה להצלחת הטעינ
     except Exception as e:
         print(f"Error loading model on startup: {e}")  # <-- הדפסה במקרה של שגיאה
         raise RuntimeError(f"Could not load model on startup: {e}")
