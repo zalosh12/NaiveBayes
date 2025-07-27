@@ -12,13 +12,42 @@ This project consists of three main components running in Docker containers:
 
 ```
 .
-├── trainer_server/         # Model training service
-├── cls/                    # Model classification service (API)
-├── client/                 # Streamlit UI client
-├── run_all.sh              # Bash script to build and run all containers
+├── .dockerignore # Specifies files for Docker to ignore during the build process
+├── .gitattributes # Defines attributes for files in Git
+├── .gitignore # Specifies files and directories for Git to ignore
+├── README.md # This file, the main documentation for the project
+└── run_all.sh # A script to run all services (likely runs docker-compose)
+│
+├── # ----------------------------------------------------
+├── # Classifier Service - Root Level Files
+├── # ----------------------------------------------------
+├── app.py # The API endpoint for the classifier service (FastAPI)
+├── Dockerfile # Build instructions for the classifier service's Docker image
+├── naive_bayes_classifier.py # The core logic for the classification task
+└── requirements.txt # Python dependencies for the classifier service
+│
+├── # ----------------------------------------------------
+├── # Trainer Service
+├── # ----------------------------------------------------
+└── trainer_server/
 ├── .dockerignore
-├── .gitignore
-└── README.md
+├── app.py # The API endpoint for the trainer service (FastAPI)
+├── Dockerfile # Build instructions for the trainer service's Docker image
+├── manager.py # A manager script that orchestrates the entire training pipeline
+├── requirements.txt # Python dependencies for the trainer service
+│
+├── builder/
+│ └── naive_bayes_builder.py # Logic for building and training the model
+│
+├── dat/
+│ ├── data_loader.py # Code for loading the raw data from the CSV file
+│ └── default_data.csv # The raw dataset used for training
+│
+├── data_handler/
+│ └── data_splitter.py # Code for splitting the data into train/test sets
+│
+└── evaluator/
+└── evaluate_model.py # Code for evaluating the performance of the trained model
 ```
 
 ---
