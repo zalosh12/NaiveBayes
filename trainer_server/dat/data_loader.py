@@ -60,5 +60,6 @@ class LoadData :
         if df is None or df.empty :
             raise HTTPException(status_code=400, detail="Could not load data or the file is empty.")
 
+        df = df.astype(str)
         return df
 

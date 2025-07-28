@@ -6,8 +6,9 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from manager import Manager
 import json
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
+logger = logging.getLogger("uvicorn.error")
 
 # URLs of other services in the Docker network
 CLS_SERVER_URL = "http://model-classifier:8010"

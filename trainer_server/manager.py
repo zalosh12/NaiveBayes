@@ -3,6 +3,7 @@ from dat.data_loader import LoadData
 from data_handler.data_splitter import DataSplitter
 from evaluator.evaluate_model import Evaluate
 from datetime import datetime
+from fastapi.encoders import jsonable_encoder
 import json
 import numpy as np
 
@@ -72,20 +73,26 @@ class Manager:
             json.dump(data, f, indent=4)
         print(f"Model saved successfully to {filepath}")
 
-    def convert_keys_to_builtin_types(self,d) :
+    def convert_keys_to_builtin_types(self,model) :
         # Recursively convert dict keys to basic types for JSON serialization
-        if isinstance(d, dict) :
-            new_dict = {}
-            for k, v in d.items() :
-                if isinstance(k, (np.integer, np.int64)) :
-                    k = int(k)
-                elif not isinstance(k, (str, int, float, bool, type(None))) :
-                    k = str(k)
-                new_dict[k] = self.convert_keys_to_builtin_types(v)
-            return new_dict
-        elif isinstance(d, list) :
-            return [self.convert_keys_to_builtin_types(i) for i in d]
-        else :
-            return d
+        json_compatible_model = jsonable_encoder(model, custom_encoder={
+            np.integer : int,
+            np.floating : float,
+            np.ndarray : lambda x : x.tolist()
+        })
+        return json_compatible_model
+        # if isinstance(d, dict) :
+        #     new_dict = {}
+        #     for k, v in d.items() :
+        #         if isinstance(k, (np.integer, np.int64)) :
+        #             k = int(k)
+        #         elif not isinstance(k, (str, int, float, bool, type(None))) :
+        #             k = str(k)
+        #         new_dict[k] = self.convert_keys_to_builtin_types(v)
+        #     return new_dict
+        # elif isinstance(d, list) :
+        #     return [self.convert_keys_to_builtin_types(i) for i in d]
+        # else :
+        #     return d
 
 

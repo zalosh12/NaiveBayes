@@ -1,6 +1,4 @@
-
 from typing import Dict
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from naive_bayes_classifier import NaiveBayesClassifier
@@ -22,6 +20,10 @@ class PredictRequest(BaseModel) :
 
 @app.on_event("startup")
 def fetch_model_on_startup():
+    """
+     On startup, this service actively fetches the latest trained model
+     from the trainer service to be ready for predictions.
+     """
     try:
         response = requests.get(f"{MODEL_TRAINER_URL}/export_model/")
         if response.status_code != 200:
@@ -29,14 +31,18 @@ def fetch_model_on_startup():
 
         model_dict = response.json()
         model_handler.load_model(model_dict)
-        print("Model loaded successfully on startup")  # <-- הדפסה להצלחת הטעינ
+        print("Model loaded successfully on startup")
     except Exception as e:
-        print(f"Error loading model on startup: {e}")  # <-- הדפסה במקרה של שגיאה
+        print(f"Error loading model on startup: {e}")
         raise RuntimeError(f"Could not load model on startup: {e}")
 
 
 @app.get("/model_columns/", tags=["Prediction"])
 def get_model_columns():
+    """
+       This allows the frontend to dynamically build its prediction form
+       with the correct feature names and their possible values.
+       """
     try:
         if model_handler is None or model_handler.features is None:
             raise HTTPException(status_code=404, detail="Model not trained yet. Please train a model first.")
@@ -56,6 +62,10 @@ def get_model_columns():
 
 @app.post("/predict/")
 def predict(request: PredictRequest) :
+    """
+       Receives feature data in a POST request and returns a prediction
+       using the loaded Naive Bayes model.
+       """
     try :
         result = model_handler.predict(request.features)
         return {"prediction" : result}
