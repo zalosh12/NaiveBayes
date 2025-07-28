@@ -10,7 +10,7 @@ class Evaluate:
             prediction = self.predict(row)
             if prediction == y_test.loc[i]:
                 correct += 1
-        accuracy = correct / len(y_test) * 100
+        accuracy = correct / len(y_test)
 
         return float(accuracy)
 
