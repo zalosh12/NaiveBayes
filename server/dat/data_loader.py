@@ -22,14 +22,15 @@ class LoadData :
                 self.file_src.file.seek(0)
             except UnicodeDecodeError :
                 logger.error(f"File encoding error for {self.file_src.filename}")
-                raise HTTPException(status_code=400, detail="שגיאת קידוד קובץ: הקובץ חייב להיות בפורמט UTF-8.")
+                raise HTTPException(status_code=400, detail="Unicode Error")
             except pd.errors.ParserError as e :
                 logger.error(f"CSV Parsing error for {self.file_src.filename}: {e}")
                 raise HTTPException(status_code=400,
-                                    detail=f"שגיאת פורמט CSV: לא ניתן היה לנתח את הקובץ. פרטי השגיאה: {e}")
+                                    detail=f"format error : {e}")
             except Exception as e :
                 logger.error(f"Unexpected error during file upload processing: {e}", exc_info=True)
-                raise HTTPException(status_code=500, detail=f"אירעה שגיאה לא צפויה בשרת בעת עיבוד הקובץ: {e}")
+                raise HTTPException(status_code=500,
+                                    detail=f"An unexpected error occurred on the server while processing the file. : {e}")
 
         elif isinstance(self.file_src, str) and self.file_src.startswith(('http://', 'https://')) :
             try :

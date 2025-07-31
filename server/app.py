@@ -7,11 +7,7 @@ from manager import Manager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(
-    title="Phishing Detection API",
-    description="API for training a phishing detection model and making predictions.",
-    version="1.0.0"
-)
+app = FastAPI()
 
 manager = Manager()
 
